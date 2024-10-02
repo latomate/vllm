@@ -252,6 +252,7 @@ def _no_device() -> bool:
 
 def _is_cuda() -> bool:
     has_cuda = torch.version.cuda is not None
+    has_cuda=True
     return (VLLM_TARGET_DEVICE == "cuda" and has_cuda
             and not (_is_neuron() or _is_tpu()))
 
@@ -340,8 +341,8 @@ def get_nvcc_cuda_version() -> Version:
 
     Adapted from https://github.com/NVIDIA/apex/blob/8b7a1ff183741dd8f9b87e7bafd04cfde99cea28/setup.py
     """
-    assert CUDA_HOME is not None, "CUDA_HOME is not set"
-    nvcc_output = subprocess.check_output([CUDA_HOME + "/bin/nvcc", "-V"],
+    assert envs.CUDA_HOME is not None, "CUDA_HOME is not set"
+    nvcc_output = subprocess.check_output([envs.CUDA_HOME + "/bin/nvcc", "-V"],
                                           universal_newlines=True)
     output = nvcc_output.split()
     release_idx = output.index("release") + 1
@@ -423,7 +424,7 @@ def get_requirements() -> List[str]:
         requirements = _read_requirements("requirements-cuda.txt")
     elif _is_cuda():
         requirements = _read_requirements("requirements-cuda.txt")
-        cuda_major, cuda_minor = torch.version.cuda.split(".")
+        cuda_major, cuda_minor = "12.4".split(".")
         modified_requirements = []
         for req in requirements:
             if ("vllm-flash-attn" in req
