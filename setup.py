@@ -424,7 +424,7 @@ def get_requirements() -> List[str]:
         requirements = _read_requirements("requirements-cuda.txt")
     elif _is_cuda():
         requirements = _read_requirements("requirements-cuda.txt")
-        cuda_major, cuda_minor = "12.4".split(".")
+        cuda_major, cuda_minor = "12.6".split(".")
         modified_requirements = []
         for req in requirements:
             if ("vllm-flash-attn" in req
